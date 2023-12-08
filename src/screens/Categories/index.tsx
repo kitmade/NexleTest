@@ -127,7 +127,6 @@ const CategoriesScreen = ({}: CategoriesScreenProps) => {
     setEnd(prev => {
       // default value for y is 0.7
       const calculatedY = prev.y - (y % 0.7);
-
       return {
         x: prev.x,
         y: calculatedY > 0.7 ? 0.7 : calculatedY < 0 ? 0 : calculatedY,

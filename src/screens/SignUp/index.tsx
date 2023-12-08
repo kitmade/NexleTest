@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   KeyboardAvoidingView,
+  SafeAreaView,
 } from 'react-native';
 import {CircleButton, Text, TextInput} from '../../components';
 import {useAuth, useTheme} from '../../hooks';
@@ -125,22 +126,37 @@ const PasswordStrength = () => {
 };
 
 const PasswordInput = () => {
-  const {Colors, Commons} = useTheme();
+  const {Colors, Commons, Layout, Icons, Gutters} = useTheme();
+  const [secure, setSecure] = React.useState(true);
   const {updateInputsField, validateInputs} = React.useContext(SignUpContext);
 
   const onChangeText = (text: string) => {
     updateInputsField('password', text);
   };
 
+  const iconToggle = () => {
+    setSecure(prev => !prev);
+  };
+
   return (
     <>
-      <TextInput
-        onBlur={validateInputs}
-        onChangeText={onChangeText}
-        label="Your Password"
-        placeholderTextColor={Colors['rgba(255, 255, 255, 0.5)']}
-        style={Commons.noneBorderBottom}
-      />
+      <View style={[Layout.row, Layout.alignItemsEnd]}>
+        <TextInput
+          onBlur={validateInputs}
+          onChangeText={onChangeText}
+          secureTextEntry={secure}
+          label="Your Password"
+          placeholderTextColor={Colors['rgba(255, 255, 255, 0.5)']}
+          style={[Commons.noneBorderBottom]}
+          containerStyle={Layout.fill}
+        />
+        <TouchableOpacity
+          hitSlop={10}
+          style={Gutters.smallBMargin}
+          onPress={iconToggle}>
+          <Icons.Eye />
+        </TouchableOpacity>
+      </View>
       <PasswordStrength />
     </>
   );
@@ -176,24 +192,23 @@ const SignUpScreen = ({}: SignUpScreenProps) => {
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 0, y: 0.7}}
-            style={[
-              Layout.fill,
-              Layout.justifyContentEnd,
-              Gutters.mediumHPadding,
-            ]}
+            style={[Layout.fill, Gutters.mediumHPadding]}
             colors={['transparent', '#000']}>
-            <Text style={[Fonts.extraLargeText, Gutters.regularBMargin]}>
-              Let’s get you started!
-            </Text>
-            <SignUpInputs />
-            <CheckBoxOverSixteen />
-            <Text style={{color: Colors['rgba(255, 255, 255, 0.5)']}}>
-              By clicking Sign Up, you are indicating that you have read and
-              agree to the{' '}
-              <Text style={{color: Colors['#647FFF']}}>Terms of Service</Text>{' '}
-              and <Text style={{color: Colors['#647FFF']}}>Privacy Policy</Text>
-            </Text>
-            <SignUpFooter />
+            <SafeAreaView style={[Layout.fill, Layout.justifyContentEnd]}>
+              <Text style={[Fonts.extraLargeText, Gutters.regularBMargin]}>
+                Let’s get you started!
+              </Text>
+              <SignUpInputs />
+              <CheckBoxOverSixteen />
+              <Text style={{color: Colors['rgba(255, 255, 255, 0.5)']}}>
+                By clicking Sign Up, you are indicating that you have read and
+                agree to the{' '}
+                <Text style={{color: Colors['#647FFF']}}>Terms of Service</Text>{' '}
+                and{' '}
+                <Text style={{color: Colors['#647FFF']}}>Privacy Policy</Text>
+              </Text>
+              <SignUpFooter />
+            </SafeAreaView>
           </LinearGradient>
         </ImageBackground>
       </KeyboardAvoidingView>

@@ -28,10 +28,9 @@
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>
 			<true />
-
 			<key>NSExceptionDomains</key>
 			<dict>
-				<key>streaming.nexlesoft.com:3001</key>
+				<key>New Exception Domain</key>
 				<dict>
 					<key>NSExceptionAllowsInsecureHTTPLoads</key>
 					<true />

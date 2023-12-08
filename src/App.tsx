@@ -10,6 +10,7 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import {store} from './redux';
 import ApplicationNavigator from './navigator';
+import {SafeAreaView} from 'react-native';
 
 function App(): React.JSX.Element {
   // const isDarkMode = useColorScheme() === 'dark';

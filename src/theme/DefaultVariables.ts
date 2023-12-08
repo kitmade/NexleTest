@@ -13,7 +13,7 @@ export const Colors = {
 export const MetricsSizes = {
   none: 0,
   tiny: 8,
-  small: 20,
+  small: 12,
   medium: 16,
   regular: 30,
 };
@@ -112,6 +112,7 @@ export const Layout = StyleSheet.create({
   rowBetween: {flexDirection: 'row', justifyContent: 'space-between'},
   row: {flexDirection: 'row'},
   alignItemsCenter: {alignItems: 'center'},
+  alignItemsEnd: {alignItems: 'flex-end'},
   justifyContentBetween: {justifyContent: 'space-between'},
   justifyContentEnd: {justifyContent: 'flex-end'},
   fill: {flex: 1},
