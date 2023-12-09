@@ -43,7 +43,7 @@ const SignUpFooter = () => {
   const {signUp, isLogin} = useAuth();
 
   React.useEffect(() => {
-    if (!isLogin) {
+    if (isLogin) {
       navigation.navigate(Screens.Categories, {selecteds: []});
     }
   }, [isLogin]);
