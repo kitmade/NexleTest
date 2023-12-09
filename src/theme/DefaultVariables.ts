@@ -6,8 +6,9 @@ export const Colors = {
   'rgba(255, 255, 255, 0.5)': 'rgba(255, 255, 255, 0.5)',
   '#FFF': '#FFF',
   'rgba(255, 255, 255, 0.12)': 'rgba(255, 255, 255, 0.12)',
-  asd: ['#8A32A9', '#8A00FF'],
   red: 'red',
+  '8A32A9': '#8A32A9',
+  '8A00FF': '#8A00FF',
 };
 
 export const MetricsSizes = {
@@ -28,7 +29,12 @@ export const FontSize = {
 };
 
 export const Commons = StyleSheet.create({
-  categoryItem: {width: 109, height: 71, borderWidth: 1, borderRadius: 8},
+  categoryItem: {width: 109, height: 71, borderRadius: 8},
+  defaultCategoryItem: {
+    borderWidth: 1,
+    borderColor: Colors['rgba(255, 255, 255, 0.12)'],
+  },
+  selectedCategoryItem: {borderWidth: 0, borderColor: 'transparent'},
   height2: {height: 2},
   noneBorderBottom: {borderBottomWidth: 0},
   paddingTop80p: {paddingTop: '80%'},

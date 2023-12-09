@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import {
   View,
@@ -7,19 +6,13 @@ import {
   TouchableOpacityProps,
   ImageBackground,
   GestureResponderEvent,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
+  ScrollView,
 } from 'react-native';
 import {Text} from '../../components';
 import {useCategories, useTheme} from '../../hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import {Category, MainParamList, Screens} from '../../types';
-import {
-  NavigationProp,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 interface CategoriesScreenProps {}
 
@@ -45,14 +38,7 @@ const CategoryItem = ({
 }: {data: Category} & TouchableOpacityProps) => {
   const {name} = data;
   const [isSelected, setSelected] = React.useState(false);
-  const {Colors, Commons, Layout, Gutters} = useTheme();
-
-  const selectedStyle = {
-    backgroundColor: isSelected ? Colors['#647FFF'] : 'transparent',
-    borderColor: isSelected
-      ? Colors['#647FFF']
-      : Colors['rgba(255, 255, 255, 0.12)'],
-  };
+  const {Colors, Commons, Layout} = useTheme();
 
   const handleItemPress = (event: GestureResponderEvent) => {
     setSelected(prev => !prev);
@@ -60,53 +46,34 @@ const CategoryItem = ({
   };
 
   return (
-    <TouchableOpacity
-      onPress={handleItemPress}
-      style={[
-        Commons.categoryItem,
-        Layout.center,
-        Gutters.tinyRMargin,
-        selectedStyle,
-      ]}
-      {...props}>
-      <Text>{name}</Text>
+    <TouchableOpacity onPress={handleItemPress} {...props}>
+      <LinearGradient
+        style={[
+          Commons.categoryItem,
+          Layout.center,
+          isSelected
+            ? Commons.selectedCategoryItem
+            : Commons.defaultCategoryItem,
+        ]}
+        colors={
+          isSelected
+            ? [Colors['8A32A9'], Colors['8A00FF']]
+            : ['transparent', 'transparent']
+        }>
+        <Text>{name}</Text>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
 
-const DoneButton = ({onPress, ...props}: TouchableOpacityProps) => {
-  const route = useRoute<RouteProp<MainParamList, Screens.Categories>>();
-
-  const {Gutters} = useTheme();
-
-  const onDonePress = (e: GestureResponderEvent) => {
-    console.log('submit selecteds: ', route?.params.selecteds || []);
-    onPress && onPress(e);
-  };
-
-  return (
-    <TouchableOpacity
-      onPress={onDonePress}
-      style={Gutters.mediumRPadding}
-      {...props}>
-      <Text>Done</Text>
-    </TouchableOpacity>
-  );
-};
+const numColumns = 3;
 
 const CategoriesScreen = ({}: CategoriesScreenProps) => {
   const navigation =
     useNavigation<NavigationProp<MainParamList, Screens.Categories>>();
   const {Gutters, Images, Commons, Layout} = useTheme();
-  const {categories} = useCategories();
+  const {categories} = useCategories({numColumns});
   const selectedList = React.useRef<Category[]>([]);
-  const [end, setEnd] = React.useState({x: 0, y: 0.7});
-
-  React.useEffect(() => {
-    navigation.setOptions({
-      headerRight: DoneButton,
-    });
-  }, []);
 
   const onItemPress = (category: Category) => {
     const {id} = category;
@@ -119,44 +86,39 @@ const CategoriesScreen = ({}: CategoriesScreenProps) => {
     }
     navigation.setParams({selecteds: selectedList.current});
   };
-  const _onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const {
-      contentOffset: {y},
-    } = event.nativeEvent;
-
-    setEnd(prev => {
-      // default value for y is 0.7
-      const calculatedY = prev.y - (y % 0.7);
-      return {
-        x: prev.x,
-        y: calculatedY > 0.7 ? 0.7 : calculatedY < 0 ? 0 : calculatedY,
-      };
-    });
-  };
 
   return (
     <ImageBackground style={Layout.fill} source={Images.image2}>
-      <LinearGradient
-        start={{x: 0, y: 0}}
-        end={end}
-        colors={['transparent', '#000']}>
-        <FlatList
-          onScroll={_onScroll}
-          showsVerticalScrollIndicator={false}
-          numColumns={3}
-          columnWrapperStyle={[Gutters.tinyBPadding]}
-          contentContainerStyle={[
-            Commons.paddingTop80p,
-            Gutters.mediumHPadding,
-          ]}
-          ListHeaderComponent={<ListHeaderComponent />}
-          data={categories}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => (
-            <CategoryItem data={item} onPress={() => onItemPress(item)} />
-          )}
-        />
-      </LinearGradient>
+      <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+        <LinearGradient
+          start={{x: 0, y: 0}}
+          end={{x: 0, y: 0.3}}
+          colors={['transparent', '#000']}>
+          <FlatList
+            nestedScrollEnabled
+            scrollEnabled={false}
+            numColumns={numColumns}
+            columnWrapperStyle={[
+              Gutters.tinyBPadding,
+              Layout.justifyContentBetween,
+            ]}
+            contentContainerStyle={[
+              Commons.paddingTop80p,
+              Gutters.mediumHPadding,
+            ]}
+            ListHeaderComponent={<ListHeaderComponent />}
+            data={categories}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) =>
+              typeof item === 'undefined' ? (
+                <View style={Commons.categoryItem} />
+              ) : (
+                <CategoryItem data={item} onPress={() => onItemPress(item)} />
+              )
+            }
+          />
+        </LinearGradient>
+      </ScrollView>
     </ImageBackground>
   );
 };

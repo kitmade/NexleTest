@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Screens} from '../types';
 import {CategoriesScreen, SignUpScreen} from '../screens';
 import {HeaderBackButton} from '../components';
+import CategoriesDoneButton from '../components/CategoriesDoneButton';
 
 const Stack = createStackNavigator();
 
@@ -18,7 +19,13 @@ const StackNavigator = () => {
       }}
       initialRouteName={Screens.SignUp}>
       <Stack.Screen name={Screens.SignUp} component={SignUpScreen} />
-      <Stack.Screen name={Screens.Categories} component={CategoriesScreen} />
+      <Stack.Screen
+        options={{
+          headerRight: CategoriesDoneButton,
+        }}
+        name={Screens.Categories}
+        component={CategoriesScreen}
+      />
     </Stack.Navigator>
   );
 };
